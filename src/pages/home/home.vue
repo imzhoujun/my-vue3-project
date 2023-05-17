@@ -250,16 +250,24 @@
     <section id="pirce" class="px-[10px] pt-[10] pb-[8px]">
       <div class="content_box pt-[10px] mb-[2px] flex bg-white text-[13px]">
         <div class="first context_items" style="width: 47.9%">
-          <div class="f_img m-[1px]">
+          <div
+            class="f_img m-[1px]"
+            @click.prevent="
+              toGoodsDetail({
+                id: combo?._id['opendb-mall-goods'][0]._id,
+                name: combo?._id['opendb-mall-goods'][0].goods_name,
+              })
+            "
+          >
             <image
               :src="combo?._id['opendb-mall-goods'][0].goods_thumb"
               class="w-[168px] h-[168px]"
               style="border-radius: 5px; border: 1px solid #eeeef3"
             ></image>
           </div>
-          <div class="title ellipsis-1">
+          <div class="title ellipsis-1 h-[20px] leading-[20px]">
             <text class="ellipsis-1">
-              比比赞抹茶毛巾卷蛋糕整箱面包早餐速食懒人营养充饥解饿小零食品
+              {{ combo?._id['opendb-mall-goods'][0].goods_name }}
             </text>
           </div>
         </div>
@@ -540,6 +548,7 @@ onMounted(async () => {
     .catch((err: Error) => {
       console.log(err)
     })
+  console.log(combo.value)
 })
 </script>
 

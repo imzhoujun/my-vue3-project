@@ -46,6 +46,9 @@
             v-for="item in goods.defaultList"
             :key="item._id._value"
             class="_items p-[6px] flex white mb-[9px]"
+            @click.prevent="
+              toGoodsDetail({ id: item._id._value, name: item.name })
+            "
           >
             <div class="goods_img">
               <image :src="item.goods_thumb" class="w-[114px] h-[114px]">
@@ -80,6 +83,7 @@
 
 <script setup lang="ts">
 import { useDebouncedRef } from '@/hooks/debounce'
+import { useToGoodsDetail } from '@/hooks/useToGoodsDetail'
 import { category, searchValue } from '@/util/unicloud'
 
 type List = {
@@ -98,6 +102,7 @@ const isHeight = ref(false)
 const cateID = ref<string | number>('0')
 const activeColor = ref<string | number>('0')
 const keyword = useDebouncedRef('', 1000)
+const { toGoodsDetail } = useToGoodsDetail()
 watch(activeColor, (New, _Old) => {
   if (New == 0) {
     goods.defaultList = goods.defaultList2
