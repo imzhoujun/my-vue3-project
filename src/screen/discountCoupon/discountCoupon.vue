@@ -31,7 +31,29 @@
   <discountItem></discountItem>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useMoment } from '@/hooks/useMoment'
+const { date } = useMoment()
+// uni.$cloud
+//   .add('coupon', {
+//     start_time: 1684252800,
+//     end_time: 1688054400,
+//     with_amoun: 100,
+//     used_amount: 20,
+//     quota: 100,
+//   })
+//   .then((res) => {
+//     console.log(res)
+//   })
+const couponList = ref([])
+onMounted(async () => {
+  await uni.$cloud.find('coupon', 'end_time>$cloudEnv_now').then((res) => {
+    // console.log(res, 'aaaaaaaaaa')
+    couponList.value = res.result.data
+    console.log(couponList.value)
+  })
+})
+</script>
 
 <style scoped lang="scss">
 .bg {

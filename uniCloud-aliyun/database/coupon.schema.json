@@ -27,19 +27,30 @@
 		},
 		"start_time": {
 			"bsonType": "timestamp",
-			"title": "优惠券开始使用时间",
+			"title": "优惠券开始使用时间  时间戳单位ms",
 			"description": "可使用时间"
 		},
 		"end_time": {
 			"bsonType": "timestamp",
-			"title": "优惠券结束使用时间",
+			"title": "优惠券结束使用时间 时间戳单位ms",
 			"description": "结束使用时间"
 		},
 		"status": {
-			"bsonType": "string",
+			"bsonType": "int",
 			"title": "优惠券状态",
 			"description": "判断优惠券生效，失效，已结束",
-			"enum": ["生效", "失效", "已结束"],
+			"enum": [{
+					"text": "生效",
+					"value": 0
+				},
+				{
+					"text": "失效",
+					"value": 1
+				}, {
+					"text": "已结束",
+					"value": 2
+				}
+			],
 			"defaultValue": 0
 		},
 		"quota": {
