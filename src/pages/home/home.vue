@@ -170,13 +170,16 @@
           style="white-space: nowrap; width: calc(100% - 10px)"
         >
           <div
-            v-for="(item, index) in 4"
+            v-for="(item, index) in seckill"
             :key="index"
             class="commodity_items w-[128px] bg-yellow-100 mr-[11px]"
             style="display: inline-block"
+            @click.prevent="
+              toGoodsDetail({ id: item._id._value, name: item.name })
+            "
           >
             <div class="items_img relative">
-              <image class="w-[128px] h-[128px]" src="@img/无穷农场.jpg" />
+              <image class="w-[128px] h-[128px]" :src="item.goods_thumb" />
               <div
                 class="absolute items_countdown w-[100%] leading-[25px] h-[25px] bg-[rgba(0,0,0,.25)] bottom-[0px] left-[0px]"
               >
@@ -192,18 +195,22 @@
             <div id="items_info" class="px-[10px] pb-[3px] pt-[6px]">
               <div id="items_name" class="overflow-hidden">
                 <text style="white-space: nowrap; font-size: 15px">
-                  无穷农场盐焗鸡蛋600g爱辣卤蛋五香喜蛋休闲零食早餐整箱批发包邮
+                  {{ item.name }}
                 </text>
               </div>
               <div id="items_money_buy" class="pt-[5px] flex justify-between">
                 <div id="left_money">
                   <div class="money text-[#4a90e2] pt-[6px]">
                     <text class="text-[12px]">￥</text>
-                    <text class="text-[16px]">21</text>
+                    <text class="text-[16px]">{{
+                      item._id['opendb-mall-sku'][0].price
+                    }}</text>
                   </div>
                   <div class="money line-through text-[12px] text-[#999999]">
                     <text>￥</text>
-                    <text>29</text>
+                    <text>{{
+                      item._id['opendb-mall-sku'][0].market_price
+                    }}</text>
                   </div>
                 </div>
                 <div id="right_buy" class="self-end">
@@ -346,7 +353,9 @@ import type { TabList } from '@/util/types'
 import MyRouter from '@/util/router'
 import { getCategoryId } from '@/util/unicloud'
 import useTabs from '@/hooks/z-tabs_swiper'
+import { useToGoodsDetail } from '@/hooks/useToGoodsDetail'
 
+const { toGoodsDetail } = useToGoodsDetail()
 type List = { id: number | string; url: string; name: string }
 type ComboData = {
   discount: number
@@ -426,7 +435,8 @@ const images: Images = reactive({
 
 const list = ref<TabList[]>([])
 const combo = ref<ComboData>()
-const endTime = ref('2023-05-30')
+const seckill = ref<unknown[]>([])
+const endTime = ref('2023-06-30')
 
 const zPaging = reactive({
   refresherStatus: 0,
@@ -502,28 +512,30 @@ onMounted(async () => {
     .orderBy('_id desc')
     .get({ getCount: true, getOne: true })
 
-  // const c = uni.$cloud
-  //   .twoFind(
-  //     { dbname: 'opendb-mall-goods', where: { is_hot: true } },
-  //     { dbname: 'opendb-mall-sku', field: 'goods_id,price,market_price' },
-  //   )
-  //   .skip((1 - 1) * 4)
-  //   .limit(4)
-  //   .get({ getCount: true, getOne: true })
-  const db = uniCloud.database()
-  db.collection('opendb-mall-goods')
-    .where({ is_seckill: true })
-    .get()
-    .then((res) => {
-      console.log(res, 'get')
-    })
+  const c = uni.$cloud
+    .twoFind(
+      { dbname: 'opendb-mall-goods', where: { is_seckill: true } },
+      { dbname: 'opendb-mall-sku', field: 'goods_id,price,market_price' },
+    )
+    .skip((1 - 1) * 4)
+    .limit(4)
+    .get({ getCount: true })
 
-  await Promise.all([a, b])
+  // const db = uniCloud.database()
+  // db.collection('opendb-mall-goods')
+  //   .where({ is_seckill: true })
+  //   .get()
+  //   .then((res) => {
+  //     console.log(res, 'get')
+  //   })
+
+  await Promise.all([a, b, c])
     .then((res) => {
       // console.log(res[1].result.data, '111111111111111')
 
       list.value = res[0]
       combo.value = res[1].result.data
+      seckill.value = res[2].result.data
     })
     .catch((err: Error) => {
       console.log(err)

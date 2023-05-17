@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/v-on-event-hyphenation -->
 <template>
   <view class="content">
     <!-- 这里设置了z-paging加载时禁止自动调用reload方法，自行控制何时reload（懒加载）-->
@@ -49,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import MyRouter from '@/util/router'
+import { useToGoodsDetail } from '@/hooks/useToGoodsDetail'
 type List = {
   [key: string]: any
 }
@@ -70,6 +71,9 @@ const props = withDefaults(
     categoryId: 0,
   },
 )
+
+const { toGoodsDetail } = useToGoodsDetail()
+
 watch(
   () => props.currentIndex,
   (newV, oldV) => {
@@ -149,11 +153,6 @@ const category = async (pageNo: number, pageSize: number) => {
 const contentHeightChanged = (height: number) => {
   const finalHeight = dataList.value.length ? height : 0
   emits('heightChanged', finalHeight)
-}
-
-const toGoodsDetail = (query: { id: number; name: string }) => {
-  const queryStr = encodeURIComponent(JSON.stringify(query))
-  MyRouter.to('goodsDetail', queryStr)
 }
 
 onMounted(() => {})

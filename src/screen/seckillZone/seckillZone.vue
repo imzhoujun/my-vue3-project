@@ -15,50 +15,54 @@
     <section id="secKillList">
       <div class="list mt-[-20px]">
         <div
-          v-for="(item, index) in 3"
+          v-for="(item, index) in seckill"
           :key="index"
           class="content mx-[10px] mb-[6px] bg-white rounded-[5px]"
         >
-          <div class="items p-[10px] flexCenter">
-            <div class="items_left relative">
-              <div>
-                <image
-                  src="@img/蛋糕卷.jpg"
-                  class="w-[116px] h-[116px] rounded-[5px]"
-                >
-                </image>
-              </div>
-              <div class="count_down_box absolute bottom-0 w-[100%]">
-                <secKill
-                  :end-time="endTime"
-                  :is-default="false"
-                  class="flex justify-around"
-                >
-                  <template #right
-                    ><div class="ml-[4px] text-white">结束</div></template
+          <template v-if="item.remain_count != 0">
+            <div class="items p-[10px] flexCenter">
+              <div class="items_left relative">
+                <div>
+                  <image
+                    :src="item.goods_thumb"
+                    class="w-[116px] h-[116px] rounded-[5px]"
                   >
-                </secKill>
-              </div>
-            </div>
-            <div class="items_right flex flex-col w-[194px] ml-[5px]">
-              <div class="title_top mb-[36px] text-[15px]">
-                百事可乐300mlPET*12瓶碳酸饮料可乐迷你瓶装可乐汽水整箱包邮
-              </div>
-              <div class="price_btn_bottom flex items-center justify-between">
-                <div class="bottom_left">
-                  <text class="textColor text-[14px]">￥29</text>
-                  <text
-                    class="text-[#999999] ml-[5px]"
-                    style="text-decoration-line: line-through"
-                    >￥39</text
-                  >
+                  </image>
                 </div>
-                <div class="bottom_right">
-                  <button class="btn textColor">立即秒杀</button>
+                <div class="count_down_box absolute bottom-0 w-[100%]">
+                  <secKill
+                    :end-time="endTime"
+                    :is-default="false"
+                    class="flex justify-around"
+                  >
+                    <template #right
+                      ><div class="ml-[4px] text-white">结束</div></template
+                    >
+                  </secKill>
                 </div>
               </div>
-            </div>
-          </div>
+              <div class="items_right flex flex-col w-[194px] ml-[5px]">
+                <div class="title_top mb-[36px] text-[15px]">
+                  {{ item.name }}
+                </div>
+                <div class="price_btn_bottom flex items-center justify-between">
+                  <div class="bottom_left">
+                    <text class="textColor text-[14px]"
+                      >￥{{ item._id['opendb-mall-sku'][0].price }}</text
+                    >
+                    <text
+                      class="text-[#999999] ml-[5px]"
+                      style="text-decoration-line: line-through"
+                      >￥{{ item._id['opendb-mall-sku'][0].market_price }}</text
+                    >
+                  </div>
+                  <div class="bottom_right">
+                    <button class="btn textColor">立即秒杀</button>
+                  </div>
+                </div>
+              </div>
+            </div></template
+          >
         </div>
       </div>
     </section>
@@ -66,7 +70,27 @@
 </template>
 
 <script setup lang="ts">
-const endTime = ref('2023-05-01')
+const endTime = ref('2023-06-30')
+const seckill = ref<any[]>([])
+
+onMounted(async () => {
+  await uni.$cloud
+    .twoFind(
+      { dbname: 'opendb-mall-goods', where: { is_seckill: true } },
+      { dbname: 'opendb-mall-sku', field: 'goods_id,price,market_price' },
+    )
+    .skip((1 - 1) * 10)
+    .limit(10)
+    .get({ getCount: true })
+    .then((res: any) => {
+      console.log(res)
+
+      seckill.value = res.result.data
+    })
+    .catch((err: Error) => {
+      console.log(err)
+    })
+})
 </script>
 
 <style scoped lang="scss">

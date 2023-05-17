@@ -51,12 +51,16 @@
 		"take_count": {
 			"bsonType": "int",
 			"title": "已领取的券数",
-			"description": "用户已领取的券数的数目"
+			"description": "用户已领取的券数的数目",
+			"minimum": 0,
+			"defaultValue": 0
 		},
 		"used_count": {
 			"bsonType": "int",
 			"title": "已使用的券数",
-			"description": "用户已使用的券数的数目"
+			"description": "用户已使用的券数的数目",
+			"minimum": 0,
+			"defaultValue": 0
 		},
 		"create_time": {
 			"bsonType": "timestamp",
