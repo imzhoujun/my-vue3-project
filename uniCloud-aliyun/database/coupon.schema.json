@@ -1,0 +1,70 @@
+{
+	"bsonType": "object",
+	"required": ["with_amoun", "used_amount", "start_time", "end_time", "quota"],
+	"permission": {
+		"read": true,
+		"create": true,
+		"update": true,
+		"delete": true
+	},
+	"properties": {
+		"_id": {
+			"description": "ID，系统自动生成"
+		},
+		"with_amoun": {
+			"bsonType": "int",
+			"description": "满多少金额可折扣",
+			"title": "满减",
+			"defaultValue": 10,
+			"minimum": 10
+		},
+		"used_amount": {
+			"bsonType": "int",
+			"description": "折扣金额  例如满100-5",
+			"title": "可免金额",
+			"defaultValue": 1,
+			"minimum": 1
+		},
+		"start_time": {
+			"bsonType": "timestamp",
+			"title": "优惠券开始使用时间",
+			"description": "可使用时间"
+		},
+		"end_time": {
+			"bsonType": "timestamp",
+			"title": "优惠券结束使用时间",
+			"description": "结束使用时间"
+		},
+		"status": {
+			"bsonType": "string",
+			"title": "优惠券状态",
+			"description": "判断优惠券生效，失效，已结束",
+			"enum": ["生效", "失效", "已结束"],
+			"defaultValue": 0
+		},
+		"quota": {
+			"bsonType": "int",
+			"title": "发券数",
+			"description": "商家所发优惠券的数目",
+			"minimum": 100
+		},
+		"take_count": {
+			"bsonType": "int",
+			"title": "已领取的券数",
+			"description": "用户已领取的券数的数目"
+		},
+		"used_count": {
+			"bsonType": "int",
+			"title": "已使用的券数",
+			"description": "用户已使用的券数的数目"
+		},
+		"create_time": {
+			"bsonType": "timestamp",
+			"title": "创建时间",
+			"description": "商家优惠券创建时间",
+			"forceDefaultValue": {
+				"$env": "now"
+			}
+		}
+	}
+}

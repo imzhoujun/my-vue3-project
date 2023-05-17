@@ -1,0 +1,73 @@
+{
+	"bsonType": "object",
+	"required": [
+		"user_id",
+		"content",
+		"goods_id"
+	],
+	"permission": {
+		"read": true,
+		"create": true,
+		"update": true,
+		"delete": true
+	},
+	"properties": {
+		"_id": {
+			"description": "存储文档 ID（文章 ID），系统自动生成"
+		},
+		"user_id": {
+			"bsonType": "string",
+			"description": "评论者的uid，参考 user-demo 表",
+			"foreignKey": "user-demo._id"
+		},
+		"goods_id":{
+			"bsonType": "string",
+			"description": "商品的id",
+			"foreignKey": "openddb-mall-goods._id"
+		},
+		"content": {
+			"bsonType": "string",
+			"description": "评论内容",
+			"title": "评论内容",
+			"trim": "both"
+		},
+		"create_date": {
+			"bsonType": "timestamp",
+			"description": "评论发表时间",
+			"defaultValue": {
+				"$env": "now"
+			}
+		},
+		"imgs":{
+			"bsonType": "array",
+			"maxLength": 4,
+			"description": "用户评论附带的照片"
+		},
+		"evaluate": {
+			"bsonType": "int",
+			"description": "用户的点评 0不评 1好评 2差评",
+			"defaultValue": 0,
+			"enum": [{
+					"text": "",
+					"value": 0
+				},
+				{
+					"text": "好评",
+					"value": 1
+				},
+				{
+					"text": "差评",
+					"value": 2
+				}
+			]
+		},
+		"publish_ip": {
+			"bsonType": "string",
+			"description": "评论发表时，客户端的 IP 地址",
+			"forceDefaultValue": {
+				"$env": "clientIP"
+			}
+		}
+	},
+	"version": "0.0.1"
+}

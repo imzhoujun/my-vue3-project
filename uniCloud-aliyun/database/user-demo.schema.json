@@ -1,0 +1,38 @@
+{
+	"bsonType": "object",
+	"required": [],
+	"permission": {
+		"read": true,
+		"create": true,
+		"update": true,
+		"delete": true
+	},
+	"properties": {
+		"_id": {
+			"description": "ID，系统自动生成"
+		},
+		"username": {
+			"bsonType": "string",
+			"title": "用户名",
+			"description": "可重复取名的用户名",
+			"defaultValue": "微信用户"
+		},
+		"userimg": {
+			"bsonType": "string",
+			"title": "用户头像",
+			"defaultValue": "https://mp-6c0413ae-ffe0-416f-9cf2-a86c9d47758d.cdn.bspapp.com/cloudstorage/d5f5fa4c-6948-4d93-8daf-879a5bb73f6e.png",
+			"description": "用户的默认头像,可更换"
+		},
+		"useropenid": {
+			"bsonType": "string",
+			"description": "微信小程序用户唯一标识"
+		},
+		"register_date": {
+			"bsonType": "timestamp",
+			"description": "注册时间",
+			"forceDefaultValue": {
+				"$env": "now"
+			}
+		}
+	}
+}

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Document</title>
+	</head>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		#nav {
+			width: 100%;
+			overflow: hidden;
+		}
+
+		#nav::after {
+			content: '';
+			display: block;
+			visibility: hidden;
+			height: 0;
+			clear: both;
+		}
+
+		.list {
+			float: left;
+			white-space: nowrap;
+			background: #1062ac;
+			color: #CCCCCC;
+			padding: 0 60px;
+			transform: translateX(-50px);
+		}
+
+		.list>li {
+			display: inline-block;
+			padding: 10px;
+		}
+	</style>
+	<body>
+		<nav id="nav">
+			<ul class="list">
+				<li>最新</li>
+				<li>排行</li>
+				<li>国内</li>
+				<li>国际</li>
+				<li>社会</li>
+				<li>评论</li>
+				<li>深度</li>
+				<li>军事</li>
+				<li>历史</li>
+				<li>探索</li>
+				<li>图片</li>
+				<li>博客</li>
+				<li>媒体</li>
+				<li>视频</li>
+			</ul>
+		</nav>
+	</body>
+	<script>
+		var nav = document.querySelector('#nav');
+		var list = nav.children[0];
+		var newList = list.children[0];
+		var startX = 0;
+		var centerX = -50;
+		var maxLeft = 0;
+		var maxRight = -(list.offsetWidth - nav.offsetWidth + maxLeft);
+		var maxLeftSlide = -50;
+		var maxRightSlide = -(list.offsetWidth - nav.offsetWidth + maxLeftSlide);
+		list.addEventListener('touchstart', function(e) {
+			e = e || window.event
+			e.preventDefault()
+			list.style.transition = 'none'
+			startX = e.changedTouches[0].clientX;
+		})
+
+		list.addEventListener('touchmove', function(e) {
+			e = e || window.event
+			e.preventDefault()
+
+			var dx = e.changedTouches[0].clientX - startX;
+			var tempX = centerX + dx
+
+			if (tempX > maxLeft) {
+				tempX = maxLeft;
+			} else if (tempX < maxRight) {
+				tempX = maxRight;
+			}
+			list.style.transform = 'translateX(' + tempX + 'px)'
+			// ul.style.transform = `translateY(${tempY}px)`
+		})
+
+		list.addEventListener('touchend', function(e) {
+			e = e || window.event
+			e.preventDefault()
+
+			var dx = e.changedTouches[0].clientX - startX;
+			centerX = centerX + dx;
+			if (centerX > maxLeftSlide) {
+				centerX = maxLeftSlide;
+			} else if (centerX < maxRightSlide) {
+				centerX = maxRightSlide;
+			}
+
+			if (dx === 0) {
+				var text = document.querySelector('#text')
+				text.innerHTML = e.target.innerHTML
+			}
+			list.style.transition = 'transfrom .5s'
+			list.style.transform = 'translateX(' + centerX + 'px)'
+			// ul.style.transform = `translateY(${centerY}px)`
+		})
+	</script>
+</html>

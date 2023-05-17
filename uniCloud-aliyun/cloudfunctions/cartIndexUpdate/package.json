@@ -1,0 +1,7 @@
+{
+  "name": "whereUpdate",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "getWeChatToken",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

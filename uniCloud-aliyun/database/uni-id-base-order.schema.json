@@ -1,0 +1,80 @@
+{
+	"bsonType": "object",
+	"required": ["title","goods_id","total_fee","user_id","status"],
+	"properties": {
+		"_id": {
+			"description": "存储文档 ID（统一订单 ID），系统自动生成"
+		},
+		"title": {
+			"bsonType": "string",
+			"description": "商品标题"
+		},
+		"goods_id":{
+			"bsonType": "string",
+			"description": "商品id"
+		},
+		"total_fee": {
+			"bsonType": "int",
+			"description": "订单总金额，单位：元。"
+		},
+		"user_id": {
+			"bsonType": "String",
+			"description": "下单用户ID，user-demo表",
+			"foreignKey": "user-demo._id",
+			"forceDefaultValue": {
+				"$env": "uid"
+			}
+		},
+		"platform": {
+			"bsonType": "String",
+			"description": "下单平台类型：h5、mp-weixin、mp-alipay、app-plus等"
+		},
+		"status": {
+			"bsonType": "int",
+			"minimum": -3,
+			"maximum": 8,
+			"description": "订单状态，1：待付款，2：已付款，3：退款审核中，4：退款中，5：已退款，6：待发货, 7：已发货 8：交易完成 -1已取消付款(交易关闭)/退款，-2：退款拒绝，-3：退款失败"
+		},
+		"is_refund": {
+			"bsonType": "bool",
+			"description": "是否是退款订单",
+			"defaultValue":false
+		},
+		"refund_amount": {
+			"bsonType": "int",
+			"description": "退款金额（非退款订单表示已退款总金额，退款订单表示该笔退款的退款金额），单位：元"
+		},
+		"create_time": {
+			"bsonType": "timestamp",
+			"description": "订单创建时间/发起退款时间",
+			"defaultValue": {
+				"$env": "now"
+			}
+		},
+		"update_time": {
+			"bsonType": "timestamp",
+			"description": "订单更新时间"
+		},
+		"paid_time": {
+			"bsonType": "timestamp",
+			"description": "订单付款时间"
+		},
+		"refund_time": {
+			"bsonType": "timestamp",
+			"description": "订单完成退款时间"
+		},
+		"refund_desc": {
+			"bsonType": "String",
+			"description": "退款原因"
+		},
+		"transaction_id": {
+			"bsonType": "String",
+			"description": "微信或支付宝交易单号"
+		},
+		"remark": {
+			"bsonType": "string",
+			"description": "用户给商家的备注"
+		}
+	},
+	"version": "0.0.1"
+}

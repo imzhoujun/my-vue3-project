@@ -1,0 +1,24 @@
+{
+	"bsonType": "object",
+	"required": ["user_id","goods_id"],
+	"permission": {
+		"read": true,
+		"create": true,
+		"update": true,
+		"delete": true
+	},
+	"properties": {
+		"_id": {
+			"description": "ID，系统自动生成"
+		},
+		"user_id": {
+			"bsonType": "string",
+			"description": "用户的id"
+		},
+		"goods_id": {
+			"bsonType": "string",
+			"description": "商品的id参考`opendb-mall-goods`表",
+			"foreignKey": "opendb-mall-goods._id"
+		}
+	}
+}

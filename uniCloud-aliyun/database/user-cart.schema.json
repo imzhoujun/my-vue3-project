@@ -1,0 +1,38 @@
+{
+	"bsonType": "object",
+	"required": ["user_id"],
+	"permission": {
+		"read": true,
+		"create": true,
+		"update": true,
+		"delete": true
+	},
+	"properties": {
+		"_id": {
+			"description": "ID，系统自动生成"
+		},
+		"user_id": {
+			"description": "用户id"
+		},
+		"goods_id": {
+			"bsonType": "string",
+			"description": "商品id",
+			"foreignKey": "opendb-mall-goods._id"
+		},
+		"sku_id": {
+			"bsonType": "string",
+			"description": "商品价格id",
+			"foreignKey": "opendb-mall-sku._id"
+		},
+		"combo_id": {
+			"bsonType": "string",
+			"description": "套餐表id，参考`goods-combo`表",
+			"foreignKey": "goods-combo._id"
+		},
+		"index": {
+			"bsonType": "int",
+			"description": "加入购物车商品个数",
+			"defaultValue": 1
+		}
+	}
+}

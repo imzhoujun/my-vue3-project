@@ -1,0 +1,48 @@
+{
+	"bsonType": "object",
+	"required": ["name","price","discount","is_sell","remain_count"],
+	"permission": {
+		"read": true,
+		"create": true,
+		"update": true,
+		"delete": true
+	},
+	"properties": {
+		"_id": {
+			"description": "ID，系统自动生成"
+		},
+		"name": {
+			"description": "套餐名",
+			"bsonType": "string",
+			"trim": "both",
+			"minLength": 4,
+			"maxLength": 20
+		},
+		"price": {
+			"bsonType": "int",
+			"minimum": 1,
+			"description": "套餐前当商品和的总价"
+		},
+		"discount": {
+			"bsonType": "int",
+			"minimum": 1,
+			"description": "成为套餐的折扣价"
+		},
+		"is_sell": {
+			"bsonType": "bool",
+			"description": "是否在出售",
+			"defaultValue":true
+		},
+		"remain_count":{
+			"bsonType": "int",
+			"description": "库存数量",
+			"title": "库存数量",
+			"minimum": 100
+		},
+		"combo_thumb":{
+			"bsonType": "string",
+			"description": "套餐照片地址"
+		}
+
+	}
+}

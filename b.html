@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name='viewport'
+		content='width=device-width, initial-scale=1.0,minmum-scale=1,maxmum-scale=1,user-scalable=no'>
+	<title>Document</title>
+	<style>
+		.container {
+			width: 600px;
+			height: 300px;
+			overflow: hidden;
+		}
+
+		.dom {
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="scroll" style="color: red">
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+			<div>1</div>
+		</div>
+	</div>
+</body>
+<script>
+	var name = 'xiaowang',
+		age = 12
+	var obj = {
+		name: 'xian',
+		objage: this.age,
+		fn(a, b) {
+			console.log(obj.objage);
+			// console.log(`姓名为${this.name}，年龄为${this.age}`)
+		},
+	}
+	var db = {
+		name: 'liu',
+		age: 10
+	}
+
+	obj.fn.call(db, '成都', '上海')
+	obj.fn.apply(db, ['成都', '上海'])
+
+	function Product(name, price) {
+		this.name = name;
+		this.price = price;
+	}
+
+	function Food(name, price) {
+		Product.call(this, name, price);
+		this.category = 'food';
+	}
+
+	function Toy(name, price) {
+		Product.call(this, name, price);
+		this.category = 'toy';
+	}
+
+	var cheese = new Food('feta', 5);
+	var fun = new Toy('robot', 40);
+
+
+	console.log(cheese, fun);
+
+
+
+
+
+	const scrollEl = document.querySelector('.scroll')
+	// 定义触摸事件的回调函数
+	const onTouchMove = (e) => {
+
+		// 获取触摸位置和速度
+		const touch = e.touches[0]
+		const x = touch.clientX
+		const y = touch.clientY
+		const vx = touch.velocityX
+		const vy = touch.velocityY
+		console.log(vx);
+		const direction = 'y' // 可以根据需要修改
+		// 计算transform的值
+		let tx = x * .1
+		let ty = y * .1
+		// 限制transform的范围
+		if (tx > 20) tx = 100
+		if (tx < -20) tx = -100
+		if (ty > 20) ty = 100
+		if (ty < -20) ty = -100
+		// 应用transform属性
+		scrollEl.style.transition = 'none'
+		scrollEl.style.transform = `translate${direction.toUpperCase()}(${direction === 'y' ? ty : tx
+			}px)`
+	}
+	// 添加触摸事件的监听器
+	scrollEl.addEventListener('touchmove', onTouchMove)
+	// 定义松开事件的回调函数
+	const onTouchEnd = () => {
+		// 恢复原始状态
+		scrollEl.style.transition = 'transform 0.5s'
+		scrollEl.style.transform = 'none'
+	}
+	// 添加松开事件的监听器
+	scrollEl.addEventListener('touchend', onTouchEnd)
+</script>
+
+</html>

@@ -1,0 +1,28 @@
+{
+	"bsonType": "object",
+	"required": ["name"],
+	"permission": {
+		"read": true,
+		"create": true,
+		"update": true,
+		"delete": true
+	},
+	"properties": {
+		"_id": {
+			"description": "存储文档 ID（文章 ID），系统自动生成",
+			"permission": {
+				"read": true
+			}
+		},
+		"name": {
+			"bsonType": "string",
+			"description": "类别名称",
+			"title": "类别名称",
+			"trim": "both",
+			"permission": {
+				"read": true
+			}
+		}
+	},
+	"version": "0.0.1"
+}
