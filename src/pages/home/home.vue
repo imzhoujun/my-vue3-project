@@ -342,7 +342,6 @@
 </template>
 
 <script setup lang="ts">
-
 import type { TabList } from '@/util/types'
 import MyRouter from '@/util/router'
 import { getCategoryId } from '@/util/unicloud'
@@ -513,11 +512,10 @@ onMounted(async () => {
   //   .get({ getCount: true, getOne: true })
   const db = uniCloud.database()
   db.collection('opendb-mall-goods')
-    .update({
-      is_seckill: false,
-    })
+    .where({ is_seckill: true })
+    .get()
     .then((res) => {
-      console.log(res, 'updated')
+      console.log(res, 'get')
     })
 
   await Promise.all([a, b])
