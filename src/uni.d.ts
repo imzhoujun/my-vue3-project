@@ -14,7 +14,7 @@ declare interface Cloud {
   ): Promise<any>
   twoFind<T, U>(
     option1: { dbname: string; where?: T; field?: string },
-    option2: { dbname: string; where?: U; field?: string },
+    option2: { dbname: string; where?: U; field: string },
   )
 }
 

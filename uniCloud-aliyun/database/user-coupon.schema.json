@@ -1,0 +1,26 @@
+// 文档教程: https://uniapp.dcloud.net.cn/uniCloud/schema
+{
+	"bsonType": "object",
+	"required": [],
+	"permission": {
+		"read": true,
+		"create": true,
+		"update": true,
+		"delete": true
+	},
+	"properties": {
+		"_id": {
+			"description": "ID，系统自动生成"
+		},
+		"user_id":{
+			"bsonType": "String",
+			"description": "用户ID，参考user-demo表",
+			"foreignKey": "user-demo._id"
+		},
+		"coupon_id":{
+			"bsonType": "String",
+			"description": "优惠券ID，参考coupon表",
+			"foreignKey": "coupon._id"
+		}
+	}
+}

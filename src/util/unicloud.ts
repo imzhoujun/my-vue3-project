@@ -132,7 +132,7 @@ class Mycloud implements Cloud {
   //两表联合查询根据id查单条数据
   twoFind<T, U>(
     option1: { dbname: string; where?: T; field?: string },
-    option2: { dbname: string; where?: U; field?: string },
+    option2: { dbname: string; where?: U; field: string },
   ) {
     const db1 = db.collection(option1.dbname)?.where(option1.where).getTemp()
     const db2 = db

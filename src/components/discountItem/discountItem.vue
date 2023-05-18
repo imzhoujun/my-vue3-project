@@ -25,7 +25,9 @@
             <div
               class="circle w-[46px] h-[46px] flex items-center justify-center"
             >
-              <text class="w-[25px] textColor">立即领取</text>
+              <text class="w-[25px] textColor" @click="$emit('parent-fn')">{{
+                text
+              }}</text>
             </div>
           </div>
         </div>
@@ -47,7 +49,6 @@ const props = withDefaults(defineProps<Props>(), {
   text: '立即领取',
 })
 const { dateMsec } = useMoment()
-// console.log(props.value)
 </script>
 
 <style scoped lang="scss">

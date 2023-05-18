@@ -8,6 +8,8 @@
 </template>
 
 <script setup lang="ts">
+import { useCouponMachine } from '@/machine/couponMachine'
+
 export interface couponItem {
   create_time: number
   end_time: number
@@ -31,12 +33,14 @@ export interface couponItem {
 //   .then((res) => {
 //     console.log(res)
 //   })
-const couponList = ref<couponItem[]>([])
+
+const { state } = useCouponMachine()
+const couponList = computed<couponItem[]>(() => state.value.context.couponList)
 onMounted(async () => {
-  await uni.$cloud.find('coupon', 'end_time>$cloudEnv_now').then((res) => {
-    couponList.value = res.result.data
-    // console.log(couponList.value)
-  })
+  // await uni.$cloud.find('coupon', 'end_time>$cloudEnv_now').then((res) => {
+  //   couponList.value = res.result.data
+  //   // console.log(couponList.value)
+  // })
 })
 </script>
 

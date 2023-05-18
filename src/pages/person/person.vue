@@ -155,12 +155,12 @@ const orderIcons: List = reactive({
     {
       name: '我的优惠券',
       id: 0,
-      url: '',
+      url: 'userDiscount',
     },
     {
       name: '我的收藏',
       id: 1,
-      url: '',
+      url: 'myLike',
     },
     {
       name: '收货人地址',

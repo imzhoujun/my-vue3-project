@@ -362,8 +362,11 @@ import MyRouter from '@/util/router'
 import { getCategoryId } from '@/util/unicloud'
 import useTabs from '@/hooks/z-tabs_swiper'
 import { useToGoodsDetail } from '@/hooks/useToGoodsDetail'
+import { useCouponMachine } from '@/machine/couponMachine'
 
 const { toGoodsDetail } = useToGoodsDetail()
+
+const { send } = useCouponMachine()
 type List = { id: number | string; url: string; name: string }
 type ComboData = {
   discount: number
@@ -504,6 +507,8 @@ const heightChanged = (height: number) => {
 // }
 
 onMounted(async () => {
+  send('Fetch')
+
   const a = getCategoryId()
 
   const b = uni.$cloud
@@ -520,6 +525,7 @@ onMounted(async () => {
     .orderBy('_id desc')
     .get({ getCount: true, getOne: true })
 
+  //秒沙
   const c = uni.$cloud
     .twoFind(
       { dbname: 'opendb-mall-goods', where: { is_seckill: true } },
@@ -528,14 +534,6 @@ onMounted(async () => {
     .skip((1 - 1) * 4)
     .limit(4)
     .get({ getCount: true })
-
-  // const db = uniCloud.database()
-  // db.collection('opendb-mall-goods')
-  //   .where({ is_seckill: true })
-  //   .get()
-  //   .then((res) => {
-  //     console.log(res, 'get')
-  //   })
 
   await Promise.all([a, b, c])
     .then((res) => {
@@ -548,7 +546,7 @@ onMounted(async () => {
     .catch((err: Error) => {
       console.log(err)
     })
-  console.log(combo.value)
+  // console.log(combo.value)
 })
 </script>
 
