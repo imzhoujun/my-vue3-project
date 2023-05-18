@@ -26,7 +26,7 @@
               class="circle w-[46px] h-[46px] flex items-center justify-center"
             >
               <text class="w-[25px] textColor" @click="$emit('parent-fn')">{{
-                text
+                value.coupon_id ? '立即使用' : '立即领取'
               }}</text>
             </div>
           </div>
@@ -37,17 +37,14 @@
 </template>
 
 <script setup lang="ts">
-import type { couponItem } from '@/screen/discountCoupon/discountCoupon.vue'
+import type { Item } from '@/machine/couponMachine'
 import { useMoment } from '@/hooks/useMoment'
 
 interface Props {
-  text: st
-  value: couponItem
+  value: Item
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  text: '立即领取',
-})
+const props = withDefaults(defineProps<Props>(), {})
 const { dateMsec } = useMoment()
 </script>
 

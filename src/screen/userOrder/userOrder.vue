@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { useCartMachine } from '@/store/useCartMachine'
+import { useCartMachine } from '@/machine/useCartMachine'
 const { state, send } = useCartMachine()
 const products = ref<any>()
 products.value = computed(() => state.value.context.cartList).value

@@ -2,46 +2,20 @@
   <!-- 优惠券 -->
   <div class="content">
     <div v-for="(item, index) in couponList" :key="index">
-      <discountItem :value="item"></discountItem>
+      <discountItem :value="item" @parent-fn="toHome"></discountItem>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useCouponMachine } from '@/machine/couponMachine'
-
-export interface couponItem {
-  create_time: number
-  end_time: number
-  quota: number
-  start_time: number
-  status: number
-  take_count: number
-  used_amount: number
-  used_count: number
-  with_amoun: number
-  _id: st
-}
-// uni.$cloud
-//   .add('coupon', {
-//     start_time: 1684252800,
-//     end_time: 1688054400,
-//     with_amoun: 100,
-//     used_amount: 20,
-//     quota: 100,
-//   })
-//   .then((res) => {
-//     console.log(res)
-//   })
-
+import MyRouter from '@/util/router'
 const { state } = useCouponMachine()
-const couponList = computed<couponItem[]>(() => state.value.context.couponList)
-onMounted(async () => {
-  // await uni.$cloud.find('coupon', 'end_time>$cloudEnv_now').then((res) => {
-  //   couponList.value = res.result.data
-  //   // console.log(couponList.value)
-  // })
-})
+const couponList = computed(() => state.value.context.couponList)
+
+const toHome = () => {
+  MyRouter.toTabs('home')
+}
 </script>
 
 <style scoped lang="scss">

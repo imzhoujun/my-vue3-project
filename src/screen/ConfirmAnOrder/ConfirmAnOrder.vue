@@ -68,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { useCartMachine } from '../../store/useCartMachine'
+import { useCartMachine } from '@/machine/useCartMachine'
 const { state, send } = useCartMachine()
 
 const cart = computed(() => state.value.context.cartList)

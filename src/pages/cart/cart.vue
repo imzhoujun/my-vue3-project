@@ -114,7 +114,7 @@
 </template>
 
 <script setup lang="ts">
-import { useCartMachine } from '../../store/useCartMachine'
+import { useCartMachine } from '../../machine/useCartMachine'
 import MyRouter from '@/util/router'
 
 const db = uniCloud.database()
@@ -178,7 +178,15 @@ const All = () => {
 }
 
 const settle = () => {
-  MyRouter.to('ConfirmAnOrder')
+  const hasIsCheck = products.value.some((item: any) => item.ischeck)
+  if (hasIsCheck) {
+    MyRouter.to('ConfirmAnOrder')
+  } else {
+    uni.showToast({
+      title: '请选择一样商品',
+      icon: 'none',
+    })
+  }
 }
 
 const totalPrice = computed(() => {

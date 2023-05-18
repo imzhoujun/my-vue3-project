@@ -546,7 +546,6 @@ onMounted(async () => {
     .catch((err: Error) => {
       console.log(err)
     })
-  // console.log(combo.value)
 })
 </script>
 

@@ -150,7 +150,7 @@
 </template>
 
 <script setup lang="ts">
-import { useCartMachine } from '../../store/useCartMachine'
+import { useCartMachine } from '../../machine/useCartMachine'
 import debounce from '@/hooks/debounce'
 
 type LikeClick = {
