@@ -22,7 +22,7 @@ const db = uniCloud.database()
 //     })
 // }
 
-interface ListObj {
+export interface ListObj {
   add_date: number
   category_id: st
   comment_count: number
@@ -47,14 +47,18 @@ interface ListObj {
   total_sell_count: number
   user_id: st
   _id: st //user-cart id
+  remark: st
 }
 
 interface MachineContext {
   cartList: ListObj[]
   total: number
+  isAll: boolean
 }
 const context: MachineContext = {
   cartList: [],
+  total: 0,
+  isAll: false,
 }
 
 interface CartItem {
@@ -87,7 +91,7 @@ const getUserCart = async (): Promise<any> => {
 
 const assignCartList = assign<MachineContext>({
   cartList: (_context, _event) => {
-    console.log('请求了', _event)
+    // console.log('请求了', _event)
     const arr: CartItem[] = _event.data.result.data
     const arr2: ListObj[] = arr.map((item: CartItem) => {
       // const {
@@ -104,10 +108,11 @@ const assignCartList = assign<MachineContext>({
         goods_id: goods_id[0]._id,
         sku_id: sku_id[0]._id,
         ischeck: false,
+        remark: '',
         ...rest,
       }
     })
-    console.log(arr2, 'arr2')
+    // console.log(arr2, 'arr2')
 
     return [...arr2]
   },
@@ -157,10 +162,62 @@ const assignSubIndex = assign<MachineContext>({
     return arr
   },
 })
+const assignTotal = assign<MachineContext>({
+  total: (context, _event) => {
+    return context.cartList.reduce((sum, product) => {
+      // console.log(product.ischeck)
+
+      if (product.ischeck) {
+        return sum + product.market_price * product.index
+      } else {
+        return sum
+      }
+    }, 0)
+  },
+})
+const assignCheck = assign<MachineContext>({
+  isAll: (context, event) => {
+    // console.log(event.value)
+
+    const checkedArr = event.value
+    if (checkedArr.length === context.cartList.length) {
+      context.cartList.map((item: ListObj) => (item.ischeck = true))
+      return true
+    } else {
+      context.cartList.map((item: ListObj) => {
+        if (checkedArr.includes(item.goods_id)) {
+          item.ischeck = true
+        } else {
+          item.ischeck = false
+        }
+      })
+      return false
+    }
+  },
+})
+const assignAllCheck = assign<MachineContext>({
+  isAll: (context, _event) => {
+    const flag = !context.isAll
+    if (flag) {
+      context.cartList.map((item: ListObj) => (item.ischeck = true))
+    } else {
+      context.cartList.map((item: ListObj) => (item.ischeck = false))
+    }
+    return flag
+    // return {
+    //   ...context,
+    //   isAll: true,
+    //   cartList: context.cartList.map((item: ListObj) => ({
+    //     ...item,
+    //     ischeck: true,
+    //   })),
+    // }
+  },
+})
 
 const newCartMachine = createMachine(
   {
-    /** @xstate-layout N4IgpgJg5mDOIC5QDswHcDCBDATgFwDoBLCAGzAJjwBEs8sBiAMTDwGMALAbQAYBdRKAAOAe1hE8REckEgAHogC0ATh4EArADYA7AGYATAEZd2gCzaey-eoA0IAJ6J9BTaeUAOZZvW6epnu6a7vq6AL6hdqiYuIQk5ASkIlgQRMhQDBDSFKkAbiIA1hRUtPS8AkggouKS0rIKCPquBGbqhjx6VpqG3rYOSobKBPo86lruZuOaU1PhkejY+JSsC3gAMkSwhGAAtkJ49gzJEACSeDtlslUSUjIV9UaazYFBRqM8up52jghuugQ8hm0+lMpkMw2MyhMsxAURWSzwK3WmwIyBEeAAort9gw2ORcKdzvxLmJrrU7k5tIZ-jxGjoTO9Ib1vu5fC5lOpTO4wZpdCYzNDYTF4YiNoRURisQccDsRDkwATthcKlcardQPVFMC1F13v4jN0eT4vhT1ARIUDDCCtKYTLp1AL5kKqCLkeLMXsDkcFUrhCTVXV+l4XK0PCFlMpDMZ3MaEKNtARTDzgR53O9gQ7ootnTEkWK0e7sV7kBAwHIfZU-TcAwhFIZxhpE6obfp3ONtJp9DHtFYhpSacoLC3eZoM3Ds-hcyj85KGLAAK4AI2OxdL5ZVVfJDVNILBWg5Y1MWm0MasVM0ANBuis2gsPBHERhjqzyxzoqnEo9DA2nDAbHya8rMl1UQXxBmGbRAmCNoAn0fRjz6BBdDBf4QXeHwwX8GlwgfVES3gCpBXwYlqg3YCa2HFw2l0PVIymO0Y1rdkCF8Q8wQGIEO0aUchTiMBiNJNV5CUYFHlTdkAlQ7R1E8TsENrdoCGCHxEz0Tw3BGbjFl4+ESiwfj-U3Rj3EUyx1Ak-wpJkmM-mMIJ2UNKYeDvG9NNiMgKESZJUigfTSKEhBjIHTQIz3WDLFDBjhmYxM6zBVNDXccxXOIdyCHnNg2DgfDfRIoD-NMIwUMpHlfAMNpLRjKlPF5RLfgGdpWntHCn0Icc1lFXy8o1FtjJ1aiaVow1KtbBNpL8TwPAw4xkraycdg9TrBPqNxTCGSEeVYyk7S8GNvGcCxDB8ODW2CMJmszVqXwnN83UlRbq28FxxlBPRh3CzRdvUfaAS0XRvCCCD3Gw0IgA */
+    /** @xstate-layout N4IgpgJg5mDOIC5QDswHcDCBDATgFwDoBLCAGzAJjwBEs8sBiAMTDwGMALAbQAYBdRKAAOAe1hE8REckEgAHogC0ATh4EArADYA7AGYATAEZd2gCzaey-eoA0IAJ6J9BTaeUAOZZvW6epnu6a7vq6AL6hdqiYuIQk5ASkIlgQRMhQDBDSFKkAbiIA1hRUtPS8AkggouKS0rIKCPquBGbqhjx6VpqG3rYOSobKBPo86lruZuOaU1PhkejY+JSsC3gAMkSwhGAAtkJ49gzJEACSeDtlslUSUjIV9UaazYFBRqM8up52jghuugQ8hm0+lMpkMw2MyhMsxAURWSzwK3WmwIyBEeAAort9gw2ORcKdzvxLmJrrU7k5tIZ-jxGjoTO9Ib1vu5fC5lOpTO4wZpdCYzNDYTF4YiNoRURisQccDsRDkwATthcKlcardQPVFMC1F13v4jN0eT4vhT1ARIUDDCCtKYTLp1AL5kKqCLkeLMXsDkcFUrhCTVXUlLpDFTPDT9O5THTITxNMafhYCJ4rEn1FY7YYHdFFs6YkixWj3divcgIGA5D7Kn6bgGEIpdMpTP8LNptB5gyD3ro41zG75RtZtJp9NpAhmIjDHdnlrnRSiC5KGLAAK4AI2OJbLFZV1fJtcBjZHFn8-h4llcXb6CAbzhjw3U7nv3V5mbhOfwebnEo9DA2GA4YDYfItyrMl1UQTRBi6LxGUMDkOXGOM2kaRMjF0SN7zcQJtBfJ1p3fWc3QXLBSFIP8AKAollRAtV5EQNp3BcettAw5RjDcVo430ViCA+LQTFabo9XtAURFLeAKkFfBiWqHcwNrNw1HadpWy5S1-F5ONFAGU1fFMdRLAjExARjHDFjiMBpNJGiNWBR53EsfSI38ZjPH0TS2m0FCfD0rQjEHcxTNiMgilYEosEs-1dy0jxEwcgIOxcqw4z+YwgnZQ0plPHRsPHSSgviRJklSKAItk2iEAY5RB1YrR1H0YZlA8NzL01NQ0K6LlwxjO0IxyuYs3yihlzYNg4HE30ZNA8rTCMf5zCfXwDDaS1EMTSEPhBSEBnaVphP6188LWUVSqmjUQRvZsVPbdSL2+Qx3AYvT7L0fSbVQwLhRnZEdg9E7rMQNxGy43QeT0wFjFTWNL28ZwLFggwRwekIPrfI7XXnX6qMm-75IY-SepBnlB0pZQ4yBRsRjaINXq6ZHwlCIA */
     id: 'newCart',
     initial: 'idle',
     type: 'parallel',
@@ -208,32 +265,44 @@ const newCartMachine = createMachine(
               clearItem: {
                 cond: 'isLength',
                 target: 'empty',
-                actions: ['clearCartList'],
+                actions: ['clearCartList', 'assignTotal'],
               },
 
               removeItem: {
                 cond: 'isLength',
                 target: 'notEmpty',
-                actions: ['removeItem'],
+                actions: ['removeItem', 'assignTotal'],
                 internal: true,
               },
 
               addItem: {
                 target: 'notEmpty',
                 internal: true,
-                actions: ['addItem'],
+                actions: ['addItem', 'assignTotal'],
               },
 
               addIndex: {
                 target: 'notEmpty',
                 internal: true,
-                actions: ['assignAddIndex'],
+                actions: ['assignAddIndex', 'assignTotal'],
               },
 
               subIndex: {
                 target: 'notEmpty',
                 internal: true,
-                actions: ['assignSubIndex'],
+                actions: ['assignSubIndex', 'assignTotal'],
+              },
+
+              isCheck: {
+                target: 'notEmpty',
+                internal: true,
+                actions: ['assignCheck', 'assignTotal'],
+              },
+
+              allCheck: {
+                target: 'notEmpty',
+                internal: true,
+                actions: ['assignAllCheck', 'assignTotal'],
               },
             },
           },
@@ -254,6 +323,9 @@ const newCartMachine = createMachine(
       removeItem,
       assignAddIndex,
       assignSubIndex,
+      assignCheck,
+      assignAllCheck,
+      assignTotal,
     },
     guard: {
       //只有context.items.length === 1 才能进行 Fetch事件
@@ -263,7 +335,11 @@ const newCartMachine = createMachine(
   },
 )
 
-const service = interpret(newCartMachine).start()
+const service = interpret(newCartMachine)
+  .onChange((context) => {
+    console.log('The context changed:', context)
+  })
+  .start()
 
 export const useCartMachine = () => {
   return useActor(service)

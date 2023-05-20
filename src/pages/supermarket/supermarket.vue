@@ -89,11 +89,7 @@
 
         <div class="roll-box flex pb-[56px]" style="padding-bottom: 0">
           <div class="box_left">
-            <scroll-view
-              class="roll-left h-[470px]"
-              style="height: 526px"
-              scroll-y="true"
-            >
+            <scroll-view class="roll-left h-[470px] h-[526px]" scroll-y="true">
               <div
                 v-for="item in currentName"
                 :key="item.value"
@@ -107,8 +103,7 @@
           </div>
           <div class="box_right flex-1">
             <scroll-view
-              class="roll-right h-[470px] bg-white"
-              style="height: 526px"
+              class="roll-right h-[470px] h-[526px] bg-white"
               scroll-y="true"
             >
               <div v-for="(item, index) in goodsList" :key="index">
@@ -238,29 +233,31 @@ const toGoodsDetail = (query: { id: st | number; name: string }) => {
 }
 
 onMounted(async () => {
-  const res = await getCategoryId()
-  currentName.value = [...res.slice(1)]
-  const res1 = await getAllGoods()
-  const data = res1.result.data
+  if (currentName.value.length === 0 && goodsList.value.length === 0) {
+    const res = await getCategoryId()
+    currentName.value = [...res.slice(1)]
+    const res1 = await getAllGoods()
+    const data = res1.result.data
 
-  const newarr: any = []
-  currentName.value.forEach((item1: any) => {
-    const arr: any[] = []
-    const obj: {
-      name?: string
-      list?: any[]
-    } = {}
-    data.forEach((item2: any) => {
-      if (item1.value == item2.category_id[0]._id) {
-        arr.push(item2)
-        obj.name = item1.name
-        obj.list = arr
-      }
+    const newarr: any = []
+    currentName.value.forEach((item1: any) => {
+      const arr: any[] = []
+      const obj: {
+        name?: string
+        list?: any[]
+      } = {}
+      data.forEach((item2: any) => {
+        if (item1.value == item2.category_id[0]._id) {
+          arr.push(item2)
+          obj.name = item1.name
+          obj.list = arr
+        }
+      })
+      newarr.push(obj)
     })
-    newarr.push(obj)
-  })
-  console.log(newarr, 'supermarket')
-  goodsList.value = newarr
+    console.log(newarr, 'supermarket')
+    goodsList.value = newarr
+  }
 })
 </script>
 

@@ -1,6 +1,12 @@
 {
 	"bsonType": "object",
-	"required": ["title","goods_id","total_fee","user_id","status"],
+	"required": ["title", "goods_id", "total_fee", "user_id", "status"],
+	"permission": {
+		"read": true,
+		"create": true,
+		"update": true,
+		"delete": true
+	},
 	"properties": {
 		"_id": {
 			"description": "存储文档 ID（统一订单 ID），系统自动生成"
@@ -9,7 +15,7 @@
 			"bsonType": "string",
 			"description": "商品标题"
 		},
-		"goods_id":{
+		"goods_id": {
 			"bsonType": "string",
 			"description": "商品id"
 		},
@@ -20,10 +26,7 @@
 		"user_id": {
 			"bsonType": "String",
 			"description": "下单用户ID，user-demo表",
-			"foreignKey": "user-demo._id",
-			"forceDefaultValue": {
-				"$env": "uid"
-			}
+			"foreignKey": "user-demo._id"
 		},
 		"platform": {
 			"bsonType": "String",
@@ -33,12 +36,13 @@
 			"bsonType": "int",
 			"minimum": -3,
 			"maximum": 8,
-			"description": "订单状态，1：待付款，2：已付款，3：退款审核中，4：退款中，5：已退款，6：待发货, 7：已发货 8：交易完成 -1已取消付款(交易关闭)/退款，-2：退款拒绝，-3：退款失败"
+			"description": "订单状态，1：待付款，2：已付款，3：退款审核中，4：退款中，5：已退款，6：待发货, 7：已发货 8：交易完成 -1已取消付款(交易关闭)/退款，-2：退款拒绝，-3：退款失败",
+			"defaultValue": 1
 		},
 		"is_refund": {
 			"bsonType": "bool",
 			"description": "是否是退款订单",
-			"defaultValue":false
+			"defaultValue": false
 		},
 		"refund_amount": {
 			"bsonType": "int",

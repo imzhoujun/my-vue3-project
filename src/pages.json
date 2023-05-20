@@ -37,14 +37,14 @@
 			{
 				"path": "userData/userData",
 				"style": {
-					"navigationBarTitleText": "",
+					"navigationBarTitleText": "用户信息",
 					"enablePullDownRefresh": false
 				}
 			},
 			{
 				"path": "userOrder/userOrder",
 				"style": {
-					"navigationBarTitleText": "",
+					"navigationBarTitleText": "用户订单",
 					"enablePullDownRefresh": false
 				}
 			},
@@ -162,6 +162,7 @@
 		"backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {
+		"custom":false,
 		"selectedColor": "rgb(26, 169, 241)",
 		"list": [{
 				"pagePath": "pages/home/home",

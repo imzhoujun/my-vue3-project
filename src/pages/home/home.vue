@@ -506,46 +506,48 @@ const heightChanged = (height: number) => {
 //     })
 // }
 
-onMounted(async () => {
+onLoad(async () => {
   send('Fetch')
 
   const a = getCategoryId()
 
-  const b = uni.$cloud
-    .twoFind(
-      {
-        dbname: 'goods-combo',
-        field: '_id ,name,price,discount,is_sell,remain_count',
-      },
-      {
-        dbname: 'opendb-mall-goods',
-        field: 'combo_id,name as goods_name,goods_thumb',
-      },
-    )
-    .orderBy('_id desc')
-    .get({ getCount: true, getOne: true })
+  if (list.value.length === 0 && seckill.value.length === 0) {
+    const b = uni.$cloud
+      .twoFind(
+        {
+          dbname: 'goods-combo',
+          field: '_id ,name,price,discount,is_sell,remain_count',
+        },
+        {
+          dbname: 'opendb-mall-goods',
+          field: 'combo_id,name as goods_name,goods_thumb',
+        },
+      )
+      .orderBy('_id desc')
+      .get({ getCount: true, getOne: true })
 
-  //秒沙
-  const c = uni.$cloud
-    .twoFind(
-      { dbname: 'opendb-mall-goods', where: { is_seckill: true } },
-      { dbname: 'opendb-mall-sku', field: 'goods_id,price,market_price' },
-    )
-    .skip((1 - 1) * 4)
-    .limit(4)
-    .get({ getCount: true })
+    //秒沙
+    const c = uni.$cloud
+      .twoFind(
+        { dbname: 'opendb-mall-goods', where: { is_seckill: true } },
+        { dbname: 'opendb-mall-sku', field: 'goods_id,price,market_price' },
+      )
+      .skip((1 - 1) * 4)
+      .limit(4)
+      .get({ getCount: true })
 
-  await Promise.all([a, b, c])
-    .then((res) => {
-      // console.log(res[1].result.data, '111111111111111')
+    await Promise.all([a, b, c])
+      .then((res) => {
+        console.log(res[1].result.data, '111111111111111')
 
-      list.value = res[0]
-      combo.value = res[1].result.data
-      seckill.value = res[2].result.data
-    })
-    .catch((err: Error) => {
-      console.log(err)
-    })
+        list.value = res[0]
+        combo.value = res[1].result.data
+        seckill.value = res[2].result.data
+      })
+      .catch((err: Error) => {
+        console.log(err)
+      })
+  }
 })
 </script>
 

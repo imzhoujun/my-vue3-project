@@ -62,13 +62,21 @@ const assiginCoupon = assign({
     return arr1
   },
   userCouponList: (context, event) => {
+    // console.log(event.data[1].result.data)
+
     const arr = [...event.data[1].result.data]
-    const { coupon_id, ...rest } = arr[0]
-    const obj = { ...coupon_id[0], coupon_id: coupon_id[0]._id }
-    delete obj._id
-    const newArr = [{ ...obj, ...rest }]
-    // console.log(newArr);
-    return newArr
+    const arr2 = []
+    for (const item of arr) {
+      const { coupon_id, ...rest } = item
+      const obj = {
+        ...coupon_id[0],
+        coupon_id: coupon_id[0]._id,
+        ...rest,
+      }
+      delete obj._id
+      arr2.push(obj)
+    }
+    return arr2
   },
 })
 

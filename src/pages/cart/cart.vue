@@ -50,14 +50,13 @@
                       >
                         <text>-</text>
                       </button>
-                      <!-- <text
-                      class="w-[41px] h-[23px] text-center leading-[23px] border-[1px] border-solid border-[#aaaaaa]"
-                      >{{ item.index }}</text
-                    > -->
                       <input
-                        v-model="item.index"
+                        :value="item.index"
                         class="w-[41px] h-[23px] text-center leading-[23px] border-[1px] border-solid border-[#aaaaaa]"
                         type="text"
+                        :data-index="index"
+                        auto-blur
+                        @blur="blur($event, index)"
                       />
                       <button
                         class="indexBtn"
@@ -71,21 +70,17 @@
                 </div>
               </div>
             </div>
-            <!-- <view class="flex">
-            <div>{{ item.price }}</div>
-            <div class="flex">
-              <button :disabled="item.index == 1" @click="sub(index)">-</button>
-              {{ item.index }}
-              <button @click="add(index)">+</button>
-            </div>
-          </view> -->
           </label>
         </checkbox-group>
       </div>
       <div class="total_box bg-white flexCenter justify-between">
         <div @click="All">
           <label class="flexCenter">
-            <checkbox class="round red" value="isAll" :checked="isAll" />
+            <checkbox
+              class="round red"
+              value="isAll"
+              :checked="state.context.isAll"
+            />
             <div>全选</div>
           </label>
         </div>
@@ -95,7 +90,8 @@
               <text>合计:</text>
             </div>
             <div class="textColor">
-              <text>￥</text><text class="text-[18px]">{{ totalPrice }}</text>
+              <text>￥</text
+              ><text class="text-[18px]">{{ state.context.total }}</text>
             </div>
             <div>
               <button
@@ -114,71 +110,22 @@
 </template>
 
 <script setup lang="ts">
-import { useCartMachine } from '../../machine/useCartMachine'
+import type { ListObj } from '@/machine/useCartMachine'
+import { useCartMachine } from '@/machine/useCartMachine'
 import MyRouter from '@/util/router'
 
-const db = uniCloud.database()
-
 const { state, send } = useCartMachine()
+const products = computed(() => state.value.context.cartList)
 
-// const carts = ref([
-//   {
-//     id: 0,
-//     ischeck: false, //默认为false
-//     name: '篮球',
-//     price: 98,
-//     index: 1,
-//   },
-//   {
-//     id: 1,
-//     ischeck: false, //默认为false
-//     name: '足球',
-//     price: 10,
-//     index: 1,
-//   },
-// ])
-const isAll = ref(false)
-const products = ref()
-
-const add = (i: number) => {
-  send({ type: 'addIndex', value: i })
-  console.log(state.value.context.cartList, 'add')
-}
-
-const sub = (i: number) => {
-  send({ type: 'subIndex', value: i })
-}
-
-const change = (e: any) => {
+const add = (i: number) => send({ type: 'addIndex', value: i })
+const sub = (i: number) => send({ type: 'subIndex', value: i })
+const change = (e: EventHandle) => {
   const checkedArr = e.detail.value
-  const arr = products.value
-
-  if (checkedArr.length === arr.length) {
-    arr.forEach((item: any) => (item.ischeck = true))
-    isAll.value = true
-  } else {
-    isAll.value = false
-    arr.forEach((item: any) => {
-      if (checkedArr.includes(item.goods_id)) {
-        item.ischeck = true
-      } else {
-        item.ischeck = false
-      }
-    })
-  }
+  send({ type: 'isCheck', value: checkedArr })
 }
-
-const All = () => {
-  isAll.value = !isAll.value
-  if (isAll.value) {
-    products.value.forEach((item: any) => (item.ischeck = true))
-  } else {
-    products.value.forEach((item: any) => (item.ischeck = false))
-  }
-}
-
+const All = () => send({ type: 'allCheck' })
 const settle = () => {
-  const hasIsCheck = products.value.some((item: any) => item.ischeck)
+  const hasIsCheck = products.value.some((item: ListObj) => item.ischeck)
   if (hasIsCheck) {
     MyRouter.to('ConfirmAnOrder')
   } else {
@@ -189,59 +136,12 @@ const settle = () => {
   }
 }
 
-const totalPrice = computed(() => {
-  return products.value.reduce((sum, product) => {
-    console.log(product.ischeck)
+const blur = (e: InputEvent, index: number) => {
+  console.log(e)
+}
 
-    if (product.ischeck) {
-      return sum + product.market_price * product.index
-    } else {
-      return sum
-    }
-  }, 0)
-})
-
-// const products = computed(() => state.value.context.cartList)
-
-watch(
-  () => state.value.context.cartList,
-  (n, o) => {
-    products.value = n
-    console.log(n, o, 'watch')
-  },
-)
-
-onMounted(async () => {
-  const db2 = db
-    .collection('opendb-mall-sku')
-    .field('_id,price,market_price,is_seckill')
-    .getTemp()
-  const db1 = db
-    .collection('user-cart')
-    .where({
-      user_id: '64532023e766bb0085032f8b',
-    })
-    .getTemp()
-
-  db.collection(db1, 'opendb-mall-goods', db2)
-    .get()
-    .then((res) => {
-      console.log(res, 'rrrrrrrrrr')
-    })
-
-  // await uni.$cloud
-  //   .find('user-cart', {
-  //     user_id: '64532023e766bb0085032f8b',
-  //   })
-  //   .then((res: any) => {
-  //     console.log(res, 'res')
-  //   })
-  // console.log(state.value)
-
-  // send('Fetch')
-  if (state.value.context.cartList.length === 0) {
-    send('Fetch')
-  }
+onMounted(() => {
+  send('Fetch')
 })
 </script>
 
